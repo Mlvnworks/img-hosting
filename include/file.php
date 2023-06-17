@@ -16,7 +16,7 @@
             GLOBAL $connection;
 
             $fileName = uniqid().$this->name;
-            $this->path = $_SERVER['REQUEST_SCHEME']."://".$_SERVER["HTTP_HOST"]."/full-stack-file-uploading/uploaded/".$fileName;
+            $this->path = $_SERVER['REQUEST_SCHEME']."://".$_SERVER["HTTP_HOST"]."/uploaded/".$fileName;
             $dir = "../uploaded/".$fileName;
 
             if(move_uploaded_file($this->tmp_name, $dir)){
