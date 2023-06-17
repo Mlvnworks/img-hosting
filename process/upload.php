@@ -1,17 +1,27 @@
 <?php
     session_start();
-    require("../include/file.php");
+    require("../config/config.php");
 
     if(isset($_FILES["file"])){
-        $file = $_FILES["file"];
-        $holder = new File($file);
-        $holder->upload();
-        $_SESSION["current_upload"] = $holder->path;
-
-        if($holder -> err){
-            header("Location:../index.php");
-            exit();
+        $fileName = uniqid(). $_FILES["file"]["name"];
+        $path = $_SERVER['REQUEST_SCHEME']."://".$_SERVER["HTTP_HOST"]."/uploaded/".$fileName;
+        $dir = "../uploaded/".$fileName;
+        $temp_name = $_FILES["file"]["tmp_name"];
+        
+        if(move_uploaded_file($temp_name, "../uploaded/".$fileName)){
+            try{
+                $connection -> query("
+                    INSERT INTO img(file_path)
+                    VALUES('".$path."')
+                ");
+                $connection -> close();
+                $_SESSION["current_upload"] = $path;
+                
+            }catch(Exception $err){
+                print_r($err);
+            }
         }
+
     }
 
     header("Location:../index.php?c=result");
